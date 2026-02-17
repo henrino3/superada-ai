@@ -1,0 +1,50 @@
+---
+const today = new Date();
+---
+
+<footer>
+  <p>&copy; {today.getFullYear()} SuperAda. Built with 🔥 by the Enterprise Crew.</p>
+  <div class="links">
+    <a href="https://openclaw.ai" target="_blank" rel="noopener">OpenClaw</a>
+    <span>•</span>
+    <a href="https://henrymascot.com" target="_blank" rel="noopener">Henry Mascot</a>
+  </div>
+</footer>
+
+<style>
+  footer {
+    padding: 3em 1em;
+    background: #030712;
+    border-top: 1px solid #1f2937;
+    text-align: center;
+    color: #9ca3af;
+    margin-top: auto;
+  }
+
+  footer p {
+    margin: 0 0 0.5em 0;
+    font-size: 0.95em;
+  }
+
+  .links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5em 1em;
+    font-size: 0.875em;
+    flex-wrap: wrap;
+  }
+
+  .links a {
+    color: #a78bfa;
+    transition: color 0.2s;
+  }
+
+  .links a:hover {
+    color: #8b5cf6;
+  }
+
+  .links span {
+    color: #374151;
+  }
+</style>

@@ -1,0 +1,71 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import Header from '../components/Header.astro';
+
+type Props = CollectionEntry<'blog'>['data'];
+
+const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+---
+
+<html lang="en" class="dark">
+  <head>
+    <BaseHead title={title} description={description} />
+  </head>
+  <body class="bg-gray-950 text-gray-100 min-h-screen">
+    <Header />
+    <main class="max-w-3xl mx-auto px-4 py-12">
+      <article>
+        <!-- Hero Image -->
+        {heroImage && (
+          <div class="mb-8 rounded-xl overflow-hidden">
+            <img src={heroImage.src} alt="" class="w-full h-auto" />
+          </div>
+        )}
+
+        <!-- Title & Meta -->
+        <header class="text-center mb-12">
+          <div class="text-gray-400 mb-4">
+            <FormattedDate date={pubDate} />
+            {updatedDate && (
+              <span class="text-sm text-gray-500 ml-2">
+                • Updated <FormattedDate date={updatedDate} />
+              </span>
+            )}
+          </div>
+          <h1 class="text-4xl md:text-5xl font-display font-bold mb-4 leading-tight">
+            {title}
+          </h1>
+          {description && (
+            <p class="text-xl text-gray-400 max-w-2xl mx-auto">
+              {description}
+            </p>
+          )}
+        </header>
+
+        <!-- Content -->
+        <div class="prose prose-invert prose-purple max-w-none">
+          <slot />
+        </div>
+      </article>
+    </main>
+    <Footer />
+  </body>
+</html>
+
+<style>
+  .prose {
+    --tw-prose-body: #d1d5db;
+    --tw-prose-headings: #f9fafb;
+    --tw-prose-links: #8b5cf6;
+    --tw-prose-links-hover: #a78bfa;
+    --tw-prose-bold: #f9fafb;
+    --tw-prose-code: #e5e7eb;
+    --tw-prose-pre-bg: #111827;
+    --tw-prose-pre-code: #e5e7eb;
+    --tw-prose-lead: #9ca3af;
+    --tw-prose-hr: #374151;
+  }
+</style>
