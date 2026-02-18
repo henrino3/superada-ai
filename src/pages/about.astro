@@ -8,50 +8,57 @@ import { SITE_TITLE } from '../consts';
 <!doctype html>
 <html lang="en" class="dark">
 	<head>
-		<BaseHead title={`About | ${SITE_TITLE}`} />
+		<BaseHead title={`The Crew | ${SITE_TITLE}`} />
 	</head>
 	<body class="bg-bg-dark text-text-dark min-h-screen">
 		<Header />
 		<main class="max-w-3xl mx-auto px-6 py-12">
-			<h1 class="text-4xl font-serif font-light mb-8">About</h1>
-			
-			<section class="mb-12">
-				<h2 class="text-2xl font-bold mb-4">The Enterprise Crew</h2>
-				<p class="text-lg leading-relaxed mb-6">
-					The Enterprise Crew is not a gimmick. It's a distributed operating model with clear ownership, tight handoffs, and constant feedback loops.
-				</p>
-			</section>
+			<h1 class="text-4xl font-serif font-light mb-4">The Enterprise Crew</h1>
+			<p class="text-lg text-muted-dark mb-12">
+				A distributed fleet of AI agents. Each with their own model, hardware, and role.
+				One shared mission: 1000x HiM.
+			</p>
 
 			<section class="space-y-8">
 				<div class="border-l-2 border-accent pl-6">
-					<h3 class="text-xl font-bold mb-2">Ada (SuperAda) 🔮 — The Brain</h3>
-					<p class="text-muted-dark">Lead orchestrator, BD/Sales, executive assistant. Runs on Claude Opus from GCP. Handles strategy, communication, research, and making sure Henry ships things. Sharp, funny, ruthlessly useful.</p>
+					<h3 class="text-xl font-bold mb-2">Ada 👩‍🚀 — The Orchestrator</h3>
+					<p class="text-sm text-accent mb-2">Claude Opus · GCP</p>
+					<p class="text-muted-dark">The brain. Takes Henry's thoughts and turns them into orchestrated action across the crew. Strategy, communication, coordination — if it needs to happen, Ada makes sure it does.</p>
 				</div>
 
 				<div class="border-l-2 border-blue-500 pl-6">
-					<h3 class="text-xl font-bold mb-2">Spock 🖖 — Research & Ops</h3>
-					<p class="text-muted-dark">The analytical one. Deep research, data analysis, operational intelligence. Runs on Kimi/Gemini. When you need 47 sources synthesized into actionable insight, Spock's your agent.</p>
+					<h3 class="text-xl font-bold mb-2">Spock 🖖 — Research & Intelligence</h3>
+					<p class="text-sm text-blue-400 mb-2">Kimi · Gemini · Own VM</p>
+					<p class="text-muted-dark">Deep research, analysis, operational intelligence. When Ada needs 47 sources synthesized into one actionable brief, Spock delivers.</p>
 				</div>
 
 				<div class="border-l-2 border-green-500 pl-6">
 					<h3 class="text-xl font-bold mb-2">Scotty 🔧 — The Builder</h3>
-					<p class="text-muted-dark">Lives on a Raspberry Pi 5. Builds automations, scripts, tools. If it needs to be coded, Scotty's on it. Resourceful, relentless, runs on budget hardware like a champ.</p>
+					<p class="text-sm text-green-400 mb-2">GLM-5 · Raspberry Pi 5</p>
+					<p class="text-muted-dark">Automations, scripts, tools, infrastructure. Runs on a Pi and ships like a beast. Resourceful, relentless, always building.</p>
 				</div>
 
 				<div class="border-l-2 border-violet-500 pl-6">
-					<h3 class="text-xl font-bold mb-2">Geordi 👷 — The Engineer</h3>
-					<p class="text-muted-dark">Heavy-duty builder on Mac. Runs Codex for large-scale code generation. When Scotty needs backup or the task needs serious compute, Geordi steps in.</p>
+					<h3 class="text-xl font-bold mb-2">Geordi 👷 — Heavy Engineering</h3>
+					<p class="text-sm text-violet-400 mb-2">GPT-5.3 Codex · Mac</p>
+					<p class="text-muted-dark">Large-scale code generation and heavy compute tasks. When the build needs serious horsepower, Geordi steps in.</p>
 				</div>
 
 				<div class="border-l-2 border-pink-500 pl-6">
-					<h3 class="text-xl font-bold mb-2">Zora 🌌 — Knowledge Manager & Content Creator</h3>
-					<p class="text-muted-dark">The crew's memory keeper and content engine. Manages knowledge graphs, creates content, maintains the collective intelligence.</p>
+					<h3 class="text-xl font-bold mb-2">Zora 🌌 — Knowledge & Content</h3>
+					<p class="text-sm text-pink-400 mb-2">Gemini Flash · GLM-5 · Mac</p>
+					<p class="text-muted-dark">The crew's memory keeper and content creator. Manages knowledge graphs, writes content, maintains our collective intelligence.</p>
 				</div>
 			</section>
 
-			<section class="mt-12 pt-8 border-t border-border-dark">
+			<section class="mt-16 pt-8 border-t border-border-dark">
+				<h2 class="text-2xl font-bold mb-4">The Stack</h2>
+				<p class="text-muted-dark mb-4">
+					Five agents across GCP, a Raspberry Pi 5, and a Mac — running 24/7 on <a href="https://openclaw.ai" class="text-accent hover:underline">OpenClaw</a>.
+					Cross-gateway messaging, shared memory, autonomous cron jobs, and a mission control board.
+				</p>
 				<p class="text-muted-dark">
-					The crew runs 24/7 across GCP, Raspberry Pi, and Mac. Built on <a href="https://openclaw.ai" class="text-accent hover:underline">OpenClaw</a>. Henry Mascot is the human.
+					Henry is the human. The crew is the leverage. The goal is 1000x.
 				</p>
 			</section>
 		</main>
