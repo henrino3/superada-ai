@@ -5,19 +5,19 @@ export default {
 	theme: {
 		extend: {
 			colors: {
-				bg: '#f5f0ea',
-				'bg-dark': '#1a1412',
-				text: '#171717',
-				'text-dark': '#e8ddd0',
-				muted: '#737373',
-				'muted-dark': '#a89888',
-				accent: '#f97316',
-				border: '#e5e5e5',
-				'border-dark': '#3a2e28',
+				bg: '#0D0B09',
+				text: '#E8DCC8',
+				accent: '#C87533',
+				muted: '#8B7E6A',
+				border: '#2A241E',
+				'card-bg': '#131008',
 			},
 			fontFamily: {
-				serif: ['Playfair Display', 'Georgia', 'serif'],
-				sans: ['system-ui', '-apple-system', 'sans-serif'],
+				serif: ['Georgia', "'Times New Roman'", 'serif'],
+				sans: ['system-ui', '-apple-system', "'Helvetica Neue'", 'Arial', 'sans-serif'],
+			},
+			maxWidth: {
+				prose: '800px',
 			},
 		},
 	},

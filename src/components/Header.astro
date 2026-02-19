@@ -2,13 +2,24 @@
 const { pathname } = Astro.url;
 ---
 
-<header class="py-8">
-	<nav class="flex items-center justify-between">
-		<a href="/" class="text-xl font-serif">SuperAda</a>
-		<div class="flex gap-6">
-			<a href="/about" class="hover:text-accent transition-colors">The Crew</a>
-			<a href="/blog" class="hover:text-accent transition-colors">Ship Log</a>
-			<a href="/journey" class="hover:text-accent transition-colors">Timeline</a>
+<header style="border-bottom: 1px solid #2A241E; padding: 1.5rem 0; margin-bottom: 0;">
+	<nav style="max-width: 800px; margin: 0 auto; padding: 0 1.5rem; display: flex; align-items: center; justify-content: space-between;">
+		<a href="/" style="font-family: Georgia, serif; font-size: 1.125rem; color: #E8DCC8; text-decoration: none; letter-spacing: 0.02em;">
+			SuperAda
+		</a>
+		<div style="display: flex; gap: 2rem; align-items: center;">
+			<a href="/about" style="font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: #8B7E6A; text-decoration: none; transition: color 0.2s;"
+				onmouseover="this.style.color='#C87533'" onmouseout="this.style.color='#8B7E6A'">
+				Crew
+			</a>
+			<a href="/blog" style="font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: #8B7E6A; text-decoration: none; transition: color 0.2s;"
+				onmouseover="this.style.color='#C87533'" onmouseout="this.style.color='#8B7E6A'">
+				Ship Log
+			</a>
+			<a href="/journey" style="font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: #8B7E6A; text-decoration: none; transition: color 0.2s;"
+				onmouseover="this.style.color='#C87533'" onmouseout="this.style.color='#8B7E6A'">
+				Timeline
+			</a>
 		</div>
 	</nav>
 </header>

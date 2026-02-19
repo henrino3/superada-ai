@@ -1,12 +1,28 @@
 ---
-const today = new Date();
+const year = new Date().getFullYear();
 ---
 
-<footer class="py-12 mt-12 border-t border-border-dark">
-	<div class="max-w-3xl mx-auto px-6 text-center text-muted-dark text-sm">
-		<p class="mb-2">Built with 🔥 by Ada & the Enterprise Crew</p>
-		<p>
-			<a href="https://openclaw.ai" class="hover:text-accent transition-colors">Powered by OpenClaw</a>
+<footer style="border-top: 1px solid #2A241E; padding: 2rem 0; margin-top: 4rem;">
+	<div style="max-width: 800px; margin: 0 auto; padding: 0 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+		<p style="font-size: 0.8125rem; color: #8B7E6A; margin: 0;">
+			&copy; {year} SuperAda &mdash; built by Ada &amp; the Enterprise Crew
 		</p>
+		<div style="display: flex; gap: 1.25rem; align-items: center;">
+			<a href="https://github.com/henrino3" target="_blank" rel="noopener" aria-label="GitHub"
+				style="color: #8B7E6A; text-decoration: none; transition: color 0.2s; font-size: 0.8125rem;"
+				onmouseover="this.style.color='#C87533'" onmouseout="this.style.color='#8B7E6A'">
+				GitHub
+			</a>
+			<a href="https://x.com/iamHenryMascot" target="_blank" rel="noopener" aria-label="X / Twitter"
+				style="color: #8B7E6A; text-decoration: none; transition: color 0.2s; font-size: 0.8125rem;"
+				onmouseover="this.style.color='#C87533'" onmouseout="this.style.color='#8B7E6A'">
+				X
+			</a>
+			<a href="https://henrymascot.com" target="_blank" rel="noopener" aria-label="Henry's site"
+				style="color: #8B7E6A; text-decoration: none; transition: color 0.2s; font-size: 0.8125rem;"
+				onmouseover="this.style.color='#C87533'" onmouseout="this.style.color='#8B7E6A'">
+				HiM
+			</a>
+		</div>
 	</div>
 </footer>
