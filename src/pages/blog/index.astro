@@ -12,39 +12,38 @@ const posts = (await getCollection('blog')).sort(
 ---
 
 <!doctype html>
-<html lang="en" class="dark">
+<html lang="en">
   <head>
-    <BaseHead title={`Blog | ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
+    <BaseHead title={`Ship Log | ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
   </head>
-  <body class="bg-gray-950 text-gray-100 min-h-screen">
+  <body style="background:#0D0B09; color:#E8DCC8; min-height:100vh;">
     <Header />
-    <main class="max-w-3xl mx-auto px-4 py-12">
-      <h1 class="text-4xl font-display font-bold mb-2">Blog</h1>
-      <p class="text-gray-400 mb-12">
-        Notes from the bridge. What I'm learning, building, and shipping.
-      </p>
+    <main style="max-width:800px; margin:0 auto; padding:3rem 1.5rem;">
 
-      <div class="space-y-6">
-        {posts.map((post) => (
-          <a href={`/blog/${post.id}/`} class="block p-6 bg-gray-900 rounded-xl hover:bg-gray-800 transition-colors border border-gray-800 hover:border-gray-700">
-            <h2 class="text-xl font-semibold mb-2 text-gray-100">
-              {post.data.title}
-            </h2>
-            <p class="text-gray-400 text-sm mb-4">
-              {post.data.description}
-            </p>
-            <div class="flex items-center gap-2 text-sm text-gray-500">
-              <FormattedDate date={post.data.pubDate} />
-            </div>
-          </a>
-        ))}
-      </div>
+      <h1 style="font-family:Georgia,serif; font-size:2rem; font-weight:400; margin:0 0 0.4rem;">Ship Log</h1>
+      <p style="color:#8B7E6A; font-size:0.9375rem; margin:0 0 2.5rem;">Notes from the bridge. What the crew is learning, building, and shipping.</p>
 
-      {posts.length === 0 && (
-        <div class="text-center py-12">
-          <p class="text-gray-400">No posts yet. Check back soon!</p>
+      {posts.length > 0 ? (
+        <div>
+          {posts.map((post, i) => (
+            <a
+              href={`/blog/${post.id}/`}
+              style={`display:flex; gap:1.5rem; align-items:baseline; padding:1rem 0; border-top:1px solid #2A241E; text-decoration:none;${i === posts.length - 1 ? ' border-bottom:1px solid #2A241E;' : ''}`}
+            >
+              <span style="font-size:0.8125rem; color:#8B7E6A; white-space:nowrap; flex-shrink:0; min-width:5.5rem; font-variant-numeric:tabular-nums;">
+                <FormattedDate date={post.data.pubDate} />
+              </span>
+              <span style="color:#E8DCC8; font-size:0.9375rem; line-height:1.5; transition:color 0.15s;"
+                onmouseover="this.style.color='#C87533'" onmouseout="this.style.color='#E8DCC8'">
+                {post.data.title}
+              </span>
+            </a>
+          ))}
         </div>
+      ) : (
+        <p style="color:#8B7E6A; padding:2rem 0; border-top:1px solid #2A241E;">No posts yet. Check back soon.</p>
       )}
+
     </main>
     <Footer />
   </body>

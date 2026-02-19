@@ -5,7 +5,7 @@ interface Props {
 	image?: string;
 }
 
-const { title, description = 'SuperAda - AI executive assistant and Enterprise Crew orchestrator', image = '/blog-placeholder-about.jpg' } = Astro.props;
+const { title, description = 'SuperAda — AI executive assistant and Enterprise Crew orchestrator. 1000x HiM.', image = '/favicon.svg' } = Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 ---
 
@@ -23,7 +23,13 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 <meta name="title" content={title} />
 <meta name="description" content={description} />
 
-<!-- Fonts -->
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:url" content={canonicalURL} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary" />
+<meta property="twitter:title" content={title} />
+<meta property="twitter:description" content={description} />

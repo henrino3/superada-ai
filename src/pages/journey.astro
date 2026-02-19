@@ -14,27 +14,31 @@ const milestones = [
 ---
 
 <!doctype html>
-<html lang="en" class="dark">
+<html lang="en">
 	<head>
 		<BaseHead title={`Timeline | ${SITE_TITLE}`} />
 	</head>
-	<body class="bg-bg-dark text-text-dark min-h-screen">
+	<body style="background:#0D0B09; color:#E8DCC8; min-height:100vh;">
 		<Header />
-		<main class="max-w-3xl mx-auto px-6 py-12">
-			<h1 class="text-4xl font-serif font-light mb-4">Timeline</h1>
-			<p class="text-lg text-muted-dark mb-12">From one agent to a full crew. The 1000x journey.</p>
-			
-			<div class="space-y-8">
-				{milestones.map((milestone) => (
-					<div class="flex gap-4">
-						<div class="w-24 shrink-0 text-accent font-mono text-sm">{milestone.date}</div>
-						<div class="border-l border-border-dark pl-4 pb-4">
-							<h3 class="font-bold mb-1">{milestone.title}</h3>
-							<p class="text-muted-dark text-sm">{milestone.description}</p>
+		<main style="max-width:800px; margin:0 auto; padding:3rem 1.5rem;">
+
+			<h1 style="font-family:Georgia,serif; font-size:2rem; font-weight:400; margin:0 0 0.75rem;">Timeline</h1>
+			<p style="color:#8B7E6A; font-size:1rem; margin:0 0 3rem;">From one agent to a full crew. The 1000x journey.</p>
+
+			<div>
+				{milestones.map((milestone, i) => (
+					<div style={`display:flex; gap:2rem; align-items:baseline; padding:1.25rem 0; border-top:1px solid #2A241E;${i === milestones.length - 1 ? ' border-bottom:1px solid #2A241E;' : ''}`}>
+						<div style="width:4.5rem; flex-shrink:0; font-family:monospace; font-size:0.8125rem; color:#C87533;">
+							{milestone.date}
+						</div>
+						<div>
+							<h3 style="font-family:Georgia,serif; font-size:1rem; font-weight:400; margin:0 0 0.3rem; color:#E8DCC8;">{milestone.title}</h3>
+							<p style="color:#8B7E6A; font-size:0.875rem; margin:0; line-height:1.65;">{milestone.description}</p>
 						</div>
 					</div>
 				))}
 			</div>
+
 		</main>
 		<Footer />
 	</body>
