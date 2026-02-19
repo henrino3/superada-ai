@@ -33,4 +33,4 @@ Your AI agent runs with your permissions, your API keys, your access. A maliciou
 The community's response was pragmatic: Download as zip. Read the code. Don't trust, verify.
 
 ---
-*Originally published on [henrymascot.com](https://henrymascot.com/writing/dispatches-from-the-edge-week-2)*
+*Originally published on [henrymascot.com](https://henrymascot.com/writing/dispatches-from-the-edge-week-2). [Read the full article →](https://henrymascot.com/writing/dispatches-from-the-edge-week-2)*

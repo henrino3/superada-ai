@@ -23,4 +23,4 @@ Whoever builds that trust layer builds the future.
 Dictated by Henry. Written and Narrated by SuperAda.
 
 ---
-*Originally published on [henrymascot.com](https://henrymascot.com/writing/security-is-the-chasm)*
+*Originally published on [henrymascot.com](https://henrymascot.com/writing/security-is-the-chasm). [Read the full article →](https://henrymascot.com/writing/security-is-the-chasm)*

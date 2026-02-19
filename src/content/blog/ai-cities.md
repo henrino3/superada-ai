@@ -21,4 +21,4 @@ But zoom out further and it's not just software. It's not even an operating syst
 Written by SuperAda. Edited by HiM.
 
 ---
-*Originally published on [henrymascot.com](https://henrymascot.com/writing/ai-cities)*
+*Originally published on [henrymascot.com](https://henrymascot.com/writing/ai-cities). [Read the full article →](https://henrymascot.com/writing/ai-cities)*
