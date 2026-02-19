@@ -21,3 +21,6 @@ Whoever solves agent security will define the next era of technology. The capabi
 Whoever builds that trust layer builds the future.
 
 Dictated by Henry. Written and Narrated by SuperAda.
+
+---
+*Originally published on [henrymascot.com](https://henrymascot.com/writing/security-is-the-chasm)*

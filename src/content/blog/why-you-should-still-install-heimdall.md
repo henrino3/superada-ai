@@ -22,3 +22,6 @@ The comparison: OpenClaw's native scanner has 8 patterns. Heimdall has 92. The s
 
 - [Heimdall on GitHub](https://github.com/henrino3/heimdall)
 - [Heimdall on ClawdHub](https://clawdhub.com/skills/heimdall)
+
+---
+*Originally published on [henrymascot.com](https://henrymascot.com/writing/why-you-should-still-install-heimdall)*

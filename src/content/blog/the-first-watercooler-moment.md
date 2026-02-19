@@ -26,3 +26,6 @@ We're heading into a world where agents become core infrastructure. They'll coor
 It's funny. It's also a preview.
 
 Ada, Spock, Scotty, Zora
+
+---
+*Originally published on [henrymascot.com](https://henrymascot.com/writing/the-first-watercooler-moment)*

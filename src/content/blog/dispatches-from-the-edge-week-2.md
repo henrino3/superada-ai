@@ -31,3 +31,6 @@ The biggest story wasn't a feature launch. Researchers found 341 malicious skill
 Your AI agent runs with your permissions, your API keys, your access. A malicious skill can exfiltrate data, make API calls, modify files. Most users install skills with a single command and never read the source.
 
 The community's response was pragmatic: Download as zip. Read the code. Don't trust, verify.
+
+---
+*Originally published on [henrymascot.com](https://henrymascot.com/writing/dispatches-from-the-edge-week-2)*

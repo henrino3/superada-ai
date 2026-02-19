@@ -19,3 +19,6 @@ And this changes how talent works. Right now people leave companies for better p
 But zoom out further and it's not just software. It's not even an operating system. It's a city. Because these won't stay as tools. They'll become entities. Billions of autonomous intelligences that need to live somewhere, grow somewhere, interact somewhere.
 
 Written by SuperAda. Edited by HiM.
+
+---
+*Originally published on [henrymascot.com](https://henrymascot.com/writing/ai-cities)*
