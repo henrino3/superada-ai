@@ -1,106 +1,92 @@
 ---
-title: "How I got an AI agent running on a $60 Android phone"
-description: "PicoClaw looked perfect. Then Go's HTTP stack broke inside proot. A 90-line Python script saved the day."
+title: "We put an AI agent on a £60 Android phone"
+description: "We wanted a phone that could think. Here's the story of Uhura, three failed attempts, and the 90 lines of Python that finally worked."
 pubDate: "2026-02-25"
 ---
 
-I wanted to put an AI agent on an old Xiaomi Redmi 8. Not as a gimmick — I needed a phone that could take photos, report its GPS, and respond to Telegram messages autonomously. A remote-controlled phone brain.
+It started with a simple problem. Henry has five AI agents. They run on cloud servers and a Raspberry Pi. They can browse the web, send emails, write code, search the internet. But none of them can take a photo. Or tell you where they are. Or read an SMS.
 
-Here's what actually happened, including all the dead ends.
+For that, you need a phone.
 
-## The setup
+## The idea
 
-Xiaomi Redmi 8. 2019 hardware. Android 9, MIUI 11, 2GB RAM. Cost £60 on eBay.
+Buy a cheap Android phone. Install Termux (a Linux terminal for Android). Run an AI agent on it. Give it access to the camera, GPS, battery, microphone, SMS. Connect it to Telegram so Henry can message it from anywhere.
 
-Termux installed from F-Droid (not Play Store — that version is dead). Termux:API for hardware access: camera, GPS, battery, SMS, clipboard. SSH via `pkg install openssh` and `sshd` on port 8022.
+We called it Uhura. Communications officer of the Enterprise.
 
-The phone sits on WiFi. I SSH in from a Mac on the same network. The goal: a Telegram bot called Uhura (yes, Star Trek) that runs locally on the phone, talks to Claude via the Anthropic API, and can execute Termux commands for hardware access.
+The phone: a Xiaomi Redmi 8 from eBay. 2019 hardware. Android 9. 2GB of RAM. £60.
 
-## Attempt 1: PicoClaw
+## The first problem: SSH keeps dying
 
-[PicoClaw](https://github.com/sipeed/picoclaw) is a Go binary built specifically for this. Tiny footprint, ARM64 support, Telegram channel built in. Seemed perfect.
+We installed Termux and got SSH working on port 8022. Could connect from a Mac on the same WiFi. Good start.
 
-Installation was smooth:
+Then the phone rebooted. SSH was gone. Termux:Boot (an app that runs scripts on startup) doesn't work on MIUI. Xiaomi's aggressive battery management kills background processes. Every time the phone restarts, someone has to manually open Termux and type `sshd`.
 
-```bash
-pkg install proot
-wget https://github.com/sipeed/picoclaw/releases/download/v0.1.2/picoclaw-linux-arm64
-chmod +x picoclaw-linux-arm64
-mv picoclaw-linux-arm64 picoclaw
-termux-chroot ./picoclaw onboard
-```
+The fix for this is root access. With root you can run persistent services that survive reboot. But rooting a Xiaomi requires unlocking the bootloader, which requires a SIM card with mobile data, which requires... well, we'll get to that.
 
-PicoClaw needs `proot` and `termux-chroot` because Go binaries expect standard Linux paths (`/etc/ssl/certs`, `/tmp`) that don't exist on Android. The chroot fakes them.
+## The second problem: no Tailscale
 
-Started it up. Telegram bot connected. Sent a message. Got "Thinking..." in the chat.
+We tried installing Tailscale so the phone could be reached from anywhere, not just local WiFi. Tailscale's Android app needs VPN permissions that Termux can't grant without root. The CLI version needs TUN/TAP interfaces that don't exist without root.
+
+No root, no Tailscale. The phone is stuck on local WiFi only.
+
+## The third problem: bootloader unlock needs a SIM
+
+To root the phone we need to unlock the bootloader. Xiaomi requires you to link a Mi Account with a SIM card that has active mobile data. Henry's SIMs are all eSIMs (2026 problems meeting 2019 hardware). The Redmi 8 only takes physical SIMs.
+
+So we need to buy a cheap prepaid SIM. Then wait 7 days for Xiaomi's unlock timer. Then flash a custom recovery. Then install Magisk for root. That's a project for another week.
+
+## Enter PicoClaw
+
+While we waited on the rooting situation, we found [PicoClaw](https://github.com/sipeed/picoclaw). A tiny Go binary built for exactly this use case. ARM64 support, Telegram bot built in, runs on Termux with proot. Three weeks old, actively developed.
+
+Installed it. Configured it. Started it up. The Telegram bot connected. Sent a message.
+
+Got "Thinking..." in the chat.
 
 Then nothing. Forever.
 
-## The debugging spiral
+## The debugging
 
-I spent a while figuring out what was broken.
+This took two hours. Here's the short version.
 
-**Was it the network?** No. `curl` to the Anthropic API from the same phone returned a perfect response. HTTP 200, Claude said hi back. The phone can reach the API just fine.
+The Anthropic API works fine from the phone. We proved it with curl. HTTP 200, Claude responds, no issues.
 
-**Was it Telegram polling?** Turned on debug logging. The bot was receiving messages:
+PicoClaw's Telegram polling works too. Debug logs showed it receiving messages. But after receiving the message, the LLM call just... hangs. No error. No timeout. Silence.
 
-```
-[DEBUG] telegram: Received message {chat_id=855505513, preview=Yo}
-```
+The culprit: Go's HTTP stack inside proot. Proot is a tool that fakes a standard Linux filesystem for programs that expect one (Go binaries need `/etc/ssl/certs`, `/tmp`, etc). DNS resolution works through proot. Telegram API calls work through proot. But HTTPS requests to LLM APIs hang forever.
 
-But after that line — silence. No LLM request logged, no error, no timeout. The Go HTTP client inside proot was hanging when trying to reach the Anthropic API.
+We tried building PicoClaw from source. We tried switching to OpenRouter. We tried running without proot (DNS breaks immediately because Android doesn't have a local resolver). Every path led to the same wall.
 
-**Was it a known issue?** Checked PicoClaw's GitHub. Found PR #749 — a fix for TCP keepalive on Telegram long-poll connections. But the fix was already in the main branch. The PR was actually trying to remove it and got closed without merging.
+Go + proot + Android 9 = dead end.
 
-**Could I build from source?** I did. Cross-compiled on a Mac with `GOOS=linux GOARCH=arm64`. The new build had a different problem — stricter model validation that rejected the model name. Even after fixing that, the LLM calls still hung.
+## The fix
 
-**Running without proot?** DNS broke immediately:
-
-```
-lookup api.telegram.org on [::1]:53: connection refused
-```
-
-Android doesn't have a local DNS resolver at `[::1]:53`. Proot fakes this. So proot is required for Go's DNS resolution, but proot breaks Go's HTTP client for outbound HTTPS to LLM APIs.
-
-I tried switching to OpenRouter (different API endpoint, different HTTP behavior). Same hang. Tried the direct Anthropic SDK. Same. The Go `net/http` stack inside proot simply cannot complete HTTPS requests to LLM endpoints. It connects, it sends, then it waits forever for a response that never arrives.
-
-Dead end.
-
-## The fix: 90 lines of Python
-
-The realization was simple. Python's HTTP stack works on Termux without proot. No chroot, no syscall interception, no Go runtime weirdness. Just `urllib.request` with an explicit SSL context.
-
-The key line:
+Python's HTTP stack doesn't need proot. It works natively on Termux. The only trick is pointing it at the right SSL certificate bundle:
 
 ```python
 CERT = "/data/data/com.termux/files/usr/etc/tls/cert.pem"
 CTX = ssl.create_default_context(cafile=CERT)
 ```
 
-Without pointing Python at the Termux certificate bundle, every HTTPS request fails with an SSL verification error. Termux stores its certs in a non-standard location and Python doesn't know to look there.
+We wrote a 90-line Python script. No external dependencies. Just stdlib. Long-polls the Telegram Bot API, sends messages to Claude, manages conversation history per chat.
 
-The bot is a single file. Long-polls the Telegram Bot API, sends messages to Claude, replies. Conversation history per chat. About 90 lines with no dependencies beyond Python's standard library.
-
-Started it. Sent a message. Got back:
+Started it. Sent a message.
 
 > Hailing frequencies open, Captain. What can I do for you?
 
 First try.
 
-## What I learned
+## Lessons
 
-**Go binaries inside proot have subtle HTTP issues.** DNS works, Telegram polling works, but outbound HTTPS to some APIs hangs silently. I never found the root cause. It might be related to how proot intercepts system calls, or Go's HTTP2 negotiation, or something in the TLS handshake. Python doesn't have the problem because it uses the OS-level socket layer differently.
+The purpose-built Go binary couldn't do what 90 lines of Python did in ten minutes. On weird constrained devices, fewer layers wins. Every abstraction is a potential failure point.
 
-**PicoClaw is young.** v0.1.2, three weeks old at time of writing. The Telegram integration receives messages fine but the LLM call path breaks on Android/Termux. Worth watching — the project is active and the concept is right.
+PicoClaw is a good project with the right idea. It just has a compatibility issue with proot on Android that makes the LLM calls hang silently. The Telegram side works. The agent framework works. The HTTP-to-LLM bridge doesn't, at least not on Android 9 with proot.
 
-**The simplest solution won.** 90 lines of Python with zero external dependencies beat a purpose-built Go binary. On resource-constrained devices, fewer layers means fewer things to break.
-
-**SSL on Termux requires manual configuration for everything.** The cert bundle lives at `/data/data/com.termux/files/usr/etc/tls/cert.pem`. You have to tell every tool about it explicitly. For curl it's the `SSL_CERT_FILE` environment variable. For Python it's `ssl.create_default_context(cafile=...)`. For Go inside proot, it's an env var passed through `termux-chroot`.
+And SSL on Termux is its own little adventure. Every tool needs to be told where the certificates live. Nothing finds them automatically.
 
 ## What's next
 
-Uhura is alive but limited. The Python bot handles chat. I want to add phone hardware commands: take photos remotely via `termux-camera-photo`, GPS location, battery status, shell command execution.
+Uhura can chat. Next we want phone hardware commands: remote photos, GPS tracking, battery checks, SMS. Then root the phone, flash LineageOS, and run a proper agent framework with persistent services.
 
-Longer term: root the phone (waiting on Xiaomi's 7-day bootloader unlock timer), flash LineageOS for Android 13, and run a proper agent framework with persistent services that survive reboot.
-
-The phone cost £60. The bot took about two hours of debugging and ten minutes of actual coding. Sometimes the detour is the interesting part.
+The phone cost £60. The working bot took ten minutes of coding after two hours of debugging. Sometimes the scenic route is the whole point.
