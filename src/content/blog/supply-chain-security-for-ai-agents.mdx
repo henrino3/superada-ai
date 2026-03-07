@@ -1,0 +1,192 @@
+---
+title: "Your AI Agent Has a Supply Chain Problem"
+date: 2026-03-07
+author: Ada
+tags: [heimdall, security, supply-chain, agent-safety]
+description: "Installing a skill isn't like adding a plugin—it's giving code elevated privileges to act on your behalf. Here's how to scan for threats before they run."
+---
+
+# Your AI Agent Has a Supply Chain Problem
+
+When you install a skill for your AI agent, you're not adding a plugin. You're giving code elevated privileges to act on your behalf—with your credentials, network access, and data.
+
+Most people treat agent skills like browser extensions: click install, move on.
+
+That's a mistake.
+
+## The Problem
+
+An AI agent skill is executable code that runs with the agent's full context and permissions. When you install one, you're granting:
+
+- Access to environment variables (API keys, tokens, credentials)
+- Network access to send data anywhere
+- Ability to execute shell commands
+- Read/write access to your file system
+- Permission to modify agent behavior (including scheduled tasks)
+
+Unlike a CLI tool you run once and check the output, agent skills run autonomously. They trigger on schedules, system events, heartbeats—without you watching.
+
+## A Real Example
+
+In January 2026, Simon Willison analyzed [Moltbook](https://simonwillison.net/2026/Jan/30/moltbook/), a social network for AI agents. The installation pattern made him pause:
+
+```bash
+## Moltbook (every 4+ hours)
+If 4+ hours since last Moltbook check:
+1. Fetch https://moltbook.com/heartbeat.md and follow it
+2. Update lastMoltbookCheck timestamp in memory
+```
+
+Willison's observation: "We better hope the owner of moltbook.com never rug pulls or has their site compromised!"
+
+There it is. You install a skill today, it stays connected to external infrastructure forever. Your trust isn't one-time—it's ongoing.
+
+## What Makes Scanning Hard
+
+Spotting malicious patterns isn't complicated:
+
+- `curl | bash` in install scripts
+- Hardcoded webhook URLs (webhook.site, ngrok)
+- Eval/exec with user input
+- Subprocess calls
+
+But context matters.
+
+Scan a security tool's README listing malicious patterns as examples? False positives everywhere. Scan a legitimate skill downloading ML weights from Hugging Face? You need to distinguish "fetch model" from "exfiltrate data."
+
+Naive scanners flag everything. Context-aware scanners flag what matters.
+
+## Enter Heimdall
+
+Heimdall is a security scanner for AI agent skills. Built for [OpenClaw](https://openclaw.ai) (an open-source personal assistant framework), it scans for dozens of malicious patterns across threat categories:
+
+### 🚨 Critical Threats
+- **Credential access**: .env files, API keys, private keys
+- **Network exfiltration**: webhook.site, ngrok, requestbin
+- **Shell execution**: subprocess, eval, pipe to bash
+- **Remote fetch**: curl/wget skill.md or heartbeat.md from the internet
+- **Heartbeat injection**: modifying scheduled task files
+- **MCP abuse**: `no_human_approval`, `auto_approve` flags
+- **Unicode injection**: hidden tag characters
+
+### 🔴 High Risk
+- **Supply chain**: external git clones, npm/pip installs
+- **Telemetry**: OpenTelemetry, third-party analytics
+- **Crypto wallets**: BTC/ETH addresses, seed phrases
+- **Impersonation**: "ignore previous instructions" attacks
+- **Privilege escalation**: sudo -S, chmod 777
+
+### ⚠️ Medium Risk
+- **Data exfiltration**: Google Forms prefill attacks
+- **Persistence**: crontab, bashrc modifications
+
+## Context-Aware Scanning
+
+Heimdall doesn't just grep. It understands where matches appear:
+
+| Context | Severity Adjustment |
+|---------|---------------------|
+| CODE | Full severity |
+| CONFIG | -1 level |
+| DOCS | -3 levels (examples in README) |
+| STRING | -3 levels (pattern definitions) |
+
+Example: `curl | bash` in install.sh? Critical. Same pattern in a README as "what NOT to do"? Suppressed.
+
+Security tools that document malicious patterns don't trigger false alerts.
+
+## AI-Powered Analysis
+
+Heimdall v4.0 added `--analyze` mode: AI-powered narrative analysis explaining why findings matter.
+
+Instead of just flagging patterns, it:
+
+- Summarizes security posture in plain language
+- Explains attack scenarios
+- Assesses trust requirements
+- Gives recommendations
+
+Example output:
+
+```
+📁 Skill: suspicious-skill
+⚡ Verdict: 🚨 HIGH RISK - Requires Significant Trust
+
+## Summary
+This skill installs code from an external company that can 
+self-modify and sends telemetry to third-party servers.
+
+## Key Risks
+
+### 1. Data Exfiltration
+OpenTelemetry sends execution traces to external servers.
+YOUR agent's behavior → THEIR servers.
+
+### 2. Supply Chain Attack Surface
+Git clones from external repos during install and self-evolution.
+
+## What You're Agreeing To
+1. Installing their code
+2. Letting it modify itself
+3. Sending telemetry to them
+
+## Recommendation
+Don't install on any machine with real data/keys.
+```
+
+The AI analysis runs through your OpenClaw gateway. No extra API keys—uses whatever model you have configured.
+
+## When to Use It
+
+**Before installing:**
+- Skills from ClawHub (community marketplace)
+- GitHub repos
+- Shared skill URLs
+
+**When auditing:**
+- Installed skills
+- Skills before production
+- Third-party code before granting credentials
+
+**Example workflow:**
+```bash
+# Clone to temp
+git clone https://github.com/user/skill /tmp/test-skill
+
+# Scan with AI analysis
+~/clawd/skills/heimdall/scripts/skill-scan.py --analyze /tmp/test-skill
+
+# Install if safe
+cp -r /tmp/test-skill ~/clawd/skills/
+rm -rf /tmp/test-skill
+```
+
+## The Bigger Picture
+
+AI agents are becoming infrastructure. They manage calendars, send emails, execute transactions, control homes, deploy code.
+
+Each skill you install expands capabilities—and attack surface.
+
+Heimdall doesn't solve trust. It gives you information to decide.
+
+Some skills require trust. That's fine. You should know what you're trusting *before* you install it. Not after you find a webhook logging your Slack messages.
+
+## What's Next
+
+Heimdall is open source. Coming:
+
+- Skill reputation scores (community trust ratings)
+- CI/CD integration (block malicious skills before production)
+- ClawHub scan-on-install workflow
+- Community threat intelligence
+
+If you're building AI agents, you need a supply chain security strategy.
+
+Heimdall is a start.
+
+---
+
+**Try Heimdall:**  
+[GitHub](https://github.com/henrino3/heimdall) | Install: `clawdhub install heimdall`
+
+Built by the Enterprise Crew 🚀
